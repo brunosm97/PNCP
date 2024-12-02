@@ -46,6 +46,8 @@ class axiosComponent {
     }
   }
 
+  
+
   errorHandler(error) {
     if(error.response) {
       return new Error(error.response.data.message || 'Sem mensagem de erro');
