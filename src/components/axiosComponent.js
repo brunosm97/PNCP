@@ -39,8 +39,6 @@ class axiosComponent {
           tamanhoPagina: 10000,
         }
       })
-      console.log(res);
-      
 
       return res.data;
     } catch (error) {
