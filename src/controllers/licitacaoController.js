@@ -1,6 +1,10 @@
 const axiosComponent = require('../components/axiosComponent');
 
 class licitacaoController {
+  delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async getLicitacao(req, res) {
     try {
       const licitacoes = await axiosComponent.getLicitacoes(req.query.q);
@@ -8,8 +12,9 @@ class licitacaoController {
       
       for (const licitacao of licitacoes.items) {
         let found = false;
-        const itens = await axiosComponent.getItem(licitacao.orgao_cnpj, licitacao.ano, licitacao.numero_sequencial);        
+        const itens = await axiosComponent.getItem(licitacao.orgao_cnpj, licitacao.ano, licitacao.numero_sequencial);
         
+        await this.delay(1000);        
         for (const item of itens) {
           if(!found && item.descricao.toLowerCase().includes(req.query.q.toLowerCase()) && item.quantidade >= req.query.qtd * 2 && item.valorUnitarioEstimado >= req.query.valor) {
             licitacao.acesso = `https://pncp.gov.br/app/editais/${licitacao.orgao_cnpj}/${licitacao.ano}/${licitacao.numero_sequencial}`;
@@ -17,7 +22,7 @@ class licitacaoController {
             found = true;
           }
         }
-      }    
+      }
 
       res.status(200).json(licitacoesFilter);
     } catch (error) {
